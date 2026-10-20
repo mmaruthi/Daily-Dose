@@ -1,0 +1,94 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyODuuEG70AYnQu4gmZMNY/A",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/mmaruthi/Daily-Dose/blob/main/K-Means\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 1,
+      "metadata": {
+        "id": "Gf72Zuh5iJQa"
+      },
+      "outputs": [],
+      "source": [
+        "# Euclidean distance between two points\n",
+        "import numpy as np\n",
+        "def distance(point1, point2):\n",
+        "    distance = 0\n",
+        "    for i in range(len(point1)):\n",
+        "        distance += (point1[i] - point2[i])**2\n",
+        "    return np.sqrt(distance)"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# euclidean distance between two points\n",
+        "import numpy as np\n",
+        "def distance(point1 , point2):\n",
+        "  return np.sqrt(np.sum((point1 - point2)**2))"
+      ],
+      "metadata": {
+        "id": "750DHQXriZqf"
+      },
+      "execution_count": 2,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "def k_mean_step_by_step(X, k, n_iters=10, random_seed=42):\n",
+        "    rng = np.random.RandomState(seed)\n",
+        "    centroids = X[rng.choice(len(X), k, replace=False)]\n",
+        "    history = [(centroids.copy(), None)]\n",
+        "\n",
+        "    for _ in range(n_iters):\n",
+        "        # Assignment step: assign each point to nearest centroid\n",
+        "        dists = np.linalg.norm(X[:, None, :] - centroids[None, :, :], axis=2)\n",
+        "        labels = np.argmin(dists, axis=1)\n",
+        "        history.append((centroids.copy(), labels.copy()))\n",
+        "\n",
+        "        # Update step: move centroids to mean of assigned points\n",
+        "        new_centroids = np.array([\n",
+        "            X[labels == j].mean(axis=0) if np.any(labels == j) else centroids[j]\n",
+        "            for j in range(k)\n",
+        "        ])\n",
+        "        centroids = new_centroids\n",
+        "\n",
+        "    dists = np.linalg.norm(X[:, None, :] - centroids[None, :, :], axis=2)\n",
+        "    labels = np.argmin(dists, axis=1)\n",
+        "    history.append((centroids.copy(), labels.copy()))\n",
+        "    return history\n",
+        "\n"
+      ],
+      "metadata": {
+        "id": "WqqLtrIkjPaI"
+      },
+      "execution_count": 4,
+      "outputs": []
+    }
+  ]
+}
